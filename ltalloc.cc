@@ -206,9 +206,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #	elif defined(__ANDROID__)
 #		include <sched.h> //for sched_yield
 #		define PAUSE sched_yield()
-#	else
-#		define PAUSE __asm__ __volatile__("pause" ::: "memory")
-#	endif
+#       elif defined(__aarch64__)
+#            define PAUSE __asm__ __volatile__("yield" ::: "memory")
+#       else
+#            define PAUSE __asm__ __volatile__("pause" ::: "memory")
+#       endif
 #elif _MSC_VER
 #	include <intrin.h>
 #	define CAS_LOCK(lock) _InterlockedExchange((long*)lock, 1)
